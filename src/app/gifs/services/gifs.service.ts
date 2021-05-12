@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Gif, SearchGifsResponse } from '../interface/gifs.interface';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { SearchGifsResponse, Gif } from '../interface/gifs.interface';
 
 
 @Injectable({
@@ -8,55 +8,54 @@ import { Gif, SearchGifsResponse } from '../interface/gifs.interface';
 })
 export class GifsService {
 
-  private apiKey: string = 'dB50irrpYJwoYyXXyGtJpV37vOPsoqGt';
-  private servicioUrl: String = 'https://api.giphy.com/v1/gifs';
-  private _historial: string[] = [];
+  private apiKey     : string = 'CtbSNZMFPFlbWl1x5KQjtqPOHnE1ema5';
+  private servicioUrl: string = 'https://api.giphy.com/v1/gifs';
+  private _historial : string[] = [];
 
   public resultados: Gif[] = [];
 
-  get historial() {
 
+  get historial() {
     return [...this._historial];
   }
 
-  constructor(private http: HttpClient) {
+  constructor( private http: HttpClient ) {
 
-      this._historial = JSON.parse(localStorage.getItem('historial')!) || [];
-      this.resultados = JSON.parse(localStorage.getItem('resultados')!) || [];
+    this._historial = JSON.parse(localStorage.getItem('historial')!) || [];
+    this.resultados = JSON.parse(localStorage.getItem('resultados')!) || [];
+  
+
+    // if( localStorage.getItem('historial') ){
+    //   this._historial = JSON.parse( localStorage.getItem('historial')! );
+    // }
+
   }
 
-  buscarGifs(query: string) {
+
+
+  buscarGifs( query: string = '' ) {
 
     query = query.trim().toLocaleLowerCase();
+    
+    if( !this._historial.includes( query ) ) {
+      this._historial.unshift( query );
+      this._historial = this._historial.splice(0,10);
 
-    if (!this._historial.includes(query)) {
-      this._historial.unshift(query);
-      this._historial = this._historial.splice(0, 10);
-
-     localStorage.setItem('historial', JSON.stringify(this._historial));
+      localStorage.setItem('historial', JSON.stringify( this._historial )  );
     }
 
     const params = new HttpParams()
           .set('api_key', this.apiKey)
           .set('limit', '10')
-          .set('q', query)
+          .set('q', query );
 
-    this.http.get<SearchGifsResponse>(`${this.servicioUrl}/search`, {params})
-      .subscribe((resp ) => {
+    this.http.get<SearchGifsResponse>(`${ this.servicioUrl }/search`, { params } )
+      .subscribe( ( resp ) => {
         this.resultados = resp.data;
-        localStorage.setItem('resultados', JSON.stringify(this.resultados));
+        localStorage.setItem('resultados', JSON.stringify( this.resultados )  );
+      });
 
-      })
-    /* Maneras de hacerlo sin el module */
-    /* const resp = await fetch('https://api.giphy.com/v1/gifs/search?api_key=dB50irrpYJwoYyXXyGtJpV37vOPsoqGt&q=dragon ball z&limit=10');
-      const data = await resp.json();
-      console.log(data); */
-
-    /* fetch('https://api.giphy.com/v1/gifs/search?api_key=dB50irrpYJwoYyXXyGtJpV37vOPsoqGt&q=dragon ball z&limit=10').then(resp => {
-      resp.json().then(data => {
-        console.log(data);
-      })
-    }) */
   }
+
 
 }

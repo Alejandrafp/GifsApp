@@ -1,4 +1,3 @@
-
 export interface SearchGifsResponse {
     data:       Gif[];
     pagination: Pagination;
@@ -24,9 +23,9 @@ export interface Gif {
     import_datetime:            Date;
     trending_datetime:          string;
     images:                     Images;
-    user?:                      User;
     analytics_response_payload: string;
     analytics:                  Analytics;
+    user?:                      User;
 }
 
 export interface Analytics {
@@ -99,6 +98,8 @@ export interface Looping {
 
 export enum Rating {
     G = "g",
+    PG = "pg",
+    PG13 = "pg-13",
 }
 
 export enum Type {
@@ -134,4 +135,3 @@ export interface Pagination {
     count:       number;
     offset:      number;
 }
-

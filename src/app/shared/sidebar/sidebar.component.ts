@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GifsService } from '../../gifs/services/gifs.service';
 
 @Component({
@@ -9,13 +9,13 @@ import { GifsService } from '../../gifs/services/gifs.service';
 })
 export class SidebarComponent {
 
-  get historial(){
+  get historial() {
     return this.gifsService.historial;
   }
-  
-  constructor(private gifsService: GifsService){}
+
+  constructor( private gifsService: GifsService  ) { }
+
   buscar( termino: string ) {
     this.gifsService.buscarGifs( termino );
   }
-
 }
